@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,22 @@ namespace CromisDev.CardMatchingSystem
         private readonly List<Card> activeCards = new();
         private readonly HashSet<Card> pendingComparisons = new();
 
+        public static event Action<uint> OnCardMatched;
+
         public CardMatchHandler(MonoBehaviour coroutineRunner, float delay = 0.5f)
         {
             this.coroutineRunner = coroutineRunner;
             this.delay = delay;
+        }
+
+        public void StartListening()
+        {
+            Card.OnCardFlipped += OnCardFlipped;
+        }
+
+        public void StopListening()
+        {
+            Card.OnCardFlipped -= OnCardFlipped;
         }
 
         public void OnCardFlipped(Card card)
@@ -38,6 +51,11 @@ namespace CromisDev.CardMatchingSystem
             }
         }
 
+        public static void HandleOnCardMatched()
+        {
+            OnCardMatched?.Invoke(GameController.Settings.PointsPerCardMatch);
+        }
+
         private IEnumerator CheckMatchCoroutine(Card a, Card b)
         {
             yield return new WaitForSeconds(delay);
@@ -46,11 +64,12 @@ namespace CromisDev.CardMatchingSystem
             {
                 a.SetMatched();
                 b.SetMatched();
+                HandleOnCardMatched();
             }
             else
             {
-                a.Flip();
-                b.Flip();
+                _ = a.Flip();
+                _ = b.Flip();
             }
 
             pendingComparisons.Remove(a);
