@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using URandom = UnityEngine.Random;
+using CromisDev.Extensions.Collections;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -37,7 +38,10 @@ namespace CromisDev.CardMatchingSystem
                     $"Not enough card fronts. Requested: {count}, Available: {cardFronts?.Count ?? 0}");
             }
 
-            return cardFronts.OrderBy(x => URandom.value).Take(count).ToList();
+            List<Sprite> shuffled = new(cardFronts);
+            shuffled.Shuffle();
+
+            return shuffled.Take(count).ToList();
         }
     }
 }

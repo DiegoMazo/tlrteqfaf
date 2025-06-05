@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 2036003881963757847, guid: d2b41c65691432844bed7d095024e2b3, type: 3}
+  deckDataSO: {fileID: 11400000, guid: 187c4f49a82af4046818bc8d6ca1008f, type: 2}
   gridSize: {x: 4, y: 4}
   horizontalPadding: 0.2
   verticalPadding: 0.2

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CromisDev.Extensions.Collections;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -52,11 +53,14 @@ namespace CromisDev.CardMatchingSystem
             List<Sprite> uniqueFronts = deckDataSO.GetUniqueFronts(totalCards / 2);
 
             List<Sprite> allFronts = new();
+
             foreach (var sprite in uniqueFronts)
             {
                 allFronts.Add(sprite);
                 allFronts.Add(sprite);
             }
+
+            allFronts.Shuffle();
 
             int index = 0;
             for (int y = 0; y < gridSize.y; y++)
