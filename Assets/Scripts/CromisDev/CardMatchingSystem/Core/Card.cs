@@ -17,6 +17,8 @@ namespace CromisDev.CardMatchingSystem
         public bool IsFlipping { get; private set; }
         public string CardId { get; private set; }
 
+        public Vector3 GetSize => spriteRenderer.bounds.size; 
+
         private void UpdateSprite()
         {
             spriteRenderer.sprite = currentState == CardState.Hidden ? backSprite : frontSprite;
