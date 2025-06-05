@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,13 +6,30 @@ namespace CromisDev.CardMatchingSystem
 {
     public class BoardLayoutController : MonoBehaviour
     {
+        public static BoardLayoutController Instance { get; private set; }
+
         [Header("Card and Layout Settings")]
         [SerializeField] private Card cardPrefab;
         [SerializeField] private Vector2Int gridSize = new(4, 4);
         [SerializeField] private float horizontalPadding = 0.2f;
         [SerializeField] private float verticalPadding = 0.2f;
-
         private readonly List<Card> cards = new();
+        public static Action OnBoardCreated;
+
+        public static float Width { get; private set; }
+        public static float Height { get; private set; }
+
+        private void Awake()
+        {
+            if (!Instance)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
 
         private void Start()
         {
@@ -22,11 +40,11 @@ namespace CromisDev.CardMatchingSystem
         {
             Vector3 cardSize = cardPrefab.GetSize;
 
-            float totalWidth = gridSize.x * cardSize.x + (gridSize.x - 1) * horizontalPadding;
-            float totalHeight = gridSize.y * cardSize.z + (gridSize.y - 1) * verticalPadding;
+            Width = gridSize.x * cardSize.x + (gridSize.x - 1) * horizontalPadding;
+            Height = gridSize.y * cardSize.z + (gridSize.y - 1) * verticalPadding;
 
 
-            Vector3 origin = new(-totalWidth / 2f + cardSize.x / 2f, 0f, totalHeight / 2f - cardSize.z / 2f);
+            Vector3 origin = new(-Width / 2f + cardSize.x / 2f, 0f, Height / 2f - cardSize.z / 2f);
 
             for (int y = 0; y < gridSize.y; y++)
             {
@@ -43,6 +61,7 @@ namespace CromisDev.CardMatchingSystem
                 }
             }
 
+            OnBoardCreated?.Invoke();
         }
     }
 }
