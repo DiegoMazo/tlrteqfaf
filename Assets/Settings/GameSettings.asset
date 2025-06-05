@@ -15,4 +15,4 @@ MonoBehaviour:
   gameSettingsData:
     InitialRevealCards: 1
     RevealTime: 0.2
-    PointsPerCardMatch: 0
+    PointsPerCardMatch: 10

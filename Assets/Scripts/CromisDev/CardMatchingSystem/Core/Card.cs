@@ -25,7 +25,7 @@ namespace CromisDev.CardMatchingSystem
 
         private void OnMouseDown()
         {
-            if (!GameController.ShouldInteract) return;
+            if (!GameController.ShouldInteract || IsFlipping || IsMatched) return;
             _ = Flip();
         }
 
@@ -59,8 +59,6 @@ namespace CromisDev.CardMatchingSystem
         public async Task Flip()
         {
             float flipTime = flipDuration * 0.5f;
-
-            if (IsFlipping || IsMatched) return;
 
             IsFlipping = true;
 
