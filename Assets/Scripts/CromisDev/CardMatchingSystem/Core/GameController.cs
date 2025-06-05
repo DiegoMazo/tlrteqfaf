@@ -26,8 +26,9 @@ namespace CromisDev.CardMatchingSystem
             {
                 ShouldInteract = false;
                 await BoardLayoutController.RevelaCardsAsync(gameSettingsSO.Data.RevealTime);
-                ShouldInteract = !ShouldInteract;
             }
+
+            ShouldInteract = true;
         }
     }
 }
