@@ -34,8 +34,7 @@ namespace CromisDev.CardMatchingSystem
 
             if (cardFronts == null || cardFronts.Count < count)
             {
-                throw new InvalidOperationException(
-                    $"Not enough card fronts. Requested: {count}, Available: {cardFronts?.Count ?? 0}");
+                throw new InvalidOperationException($"Not enough card fronts. Requested: {count}, Available: {cardFronts?.Count ?? 0}");
             }
 
             List<Sprite> shuffled = new(cardFronts);

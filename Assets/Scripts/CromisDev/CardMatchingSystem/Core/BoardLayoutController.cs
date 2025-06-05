@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,13 +37,11 @@ namespace CromisDev.CardMatchingSystem
 
         public static async Task RevelaCardsAsync(float revealTime)
         {
-            List<Card> filteredCards = Instance.cards.Where(c => c.CardState == CardState.Hidden).ToList();
-
-            filteredCards.ForEach(c => c.Flip());
-            await Task.Delay((int)(revealTime * 1000));
-            filteredCards.ForEach(c => c.Flip());
+            await Task.WhenAll
+            (
+                Instance.cards.Where(c => c.CardState == CardState.Hidden && !c.IsMatched).Select(c => c.PeekAsync(revealTime))
+            );
         }
-
         public static void GenerateBoard()
         {
             Vector2Int gridSize = Instance.gridSize;
@@ -75,7 +72,8 @@ namespace CromisDev.CardMatchingSystem
             {
                 for (int x = 0; x < gridSize.x; x++)
                 {
-                    Vector3 position = origin + new Vector3(
+                    Vector3 position = origin + new Vector3
+                    (
                         x * (cardSize.x + Instance.horizontalPadding),
                         0f,
                         -y * (cardSize.z + Instance.verticalPadding)

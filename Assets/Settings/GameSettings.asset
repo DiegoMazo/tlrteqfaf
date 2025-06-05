@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSettingsData:
     InitialRevealCards: 1
-    RevealTime: 1
+    RevealTime: 0.2
     PointsPerCardMatch: 0
