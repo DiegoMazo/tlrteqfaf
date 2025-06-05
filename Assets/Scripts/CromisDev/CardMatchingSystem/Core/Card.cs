@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.XR.WSA;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -16,14 +17,20 @@ namespace CromisDev.CardMatchingSystem
         public CardState CardState { get; private set; } = CardState.Hidden;
         public bool IsFlipping { get; private set; }
         public string CardId { get; private set; }
+        public bool IsMatched { get; private set; }
 
         public Vector3 GetSize => spriteRenderer.bounds.size;
-
 
         private void OnMouseDown()
         {
             if (!GameController.ShouldInteract) return;
             Flip();
+        }
+
+        public void SetMatched()
+        {
+            IsMatched = true;
+            spriteRenderer.color = Color.green;
         }
 
         private void UpdateSprite()
@@ -42,7 +49,7 @@ namespace CromisDev.CardMatchingSystem
 
         public void Flip()
         {
-            if (!IsFlipping)
+            if (!IsFlipping && !IsMatched)
             {
                 StartCoroutine(FlipAnimation());
             }
@@ -51,14 +58,19 @@ namespace CromisDev.CardMatchingSystem
         private IEnumerator FlipAnimation()
         {
             IsFlipping = true;
+
             yield return ScaleCard(1f, 0f);
             CardState = CardState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
             UpdateSprite();
             yield return ScaleCard(0f, 1f);
 
             IsFlipping = false;
-        }
 
+            if (CardState == CardState.Revealed && !IsMatched)
+            {
+                GameController.OnCardFlipped(this);
+            }
+        }
         private IEnumerator ScaleCard(float startScale, float endScale)
         {
             float flipTime = flipDuration * 0.5f;
