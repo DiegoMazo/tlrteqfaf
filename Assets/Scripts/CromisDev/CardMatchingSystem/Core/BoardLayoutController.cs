@@ -10,6 +10,7 @@ namespace CromisDev.CardMatchingSystem
 
         [Header("Card and Layout Settings")]
         [SerializeField] private Card cardPrefab;
+        [SerializeField] private CardDeckDataSO deckDataSO;
         [SerializeField] private Vector2Int gridSize = new(4, 4);
         [SerializeField] private float horizontalPadding = 0.2f;
         [SerializeField] private float verticalPadding = 0.2f;
@@ -39,6 +40,7 @@ namespace CromisDev.CardMatchingSystem
         public void GenerateBoard()
         {
             Vector3 cardSize = cardPrefab.GetSize;
+            int totalCards = gridSize.x * gridSize.y;
 
             Width = gridSize.x * cardSize.x + (gridSize.x - 1) * horizontalPadding;
             Height = gridSize.y * cardSize.z + (gridSize.y - 1) * verticalPadding;
@@ -46,6 +48,17 @@ namespace CromisDev.CardMatchingSystem
 
             Vector3 origin = new(-Width / 2f + cardSize.x / 2f, 0f, Height / 2f - cardSize.z / 2f);
 
+            Sprite back = deckDataSO.GetRandomCardBack();
+            List<Sprite> uniqueFronts = deckDataSO.GetUniqueFronts(totalCards / 2);
+
+            List<Sprite> allFronts = new();
+            foreach (var sprite in uniqueFronts)
+            {
+                allFronts.Add(sprite);
+                allFronts.Add(sprite);
+            }
+
+            int index = 0;
             for (int y = 0; y < gridSize.y; y++)
             {
                 for (int x = 0; x < gridSize.x; x++)
@@ -57,7 +70,9 @@ namespace CromisDev.CardMatchingSystem
                     );
 
                     Card card = Instantiate(cardPrefab, position, Quaternion.identity, transform);
+                    card.Initialize(CardState.Hidden, allFronts[index], back);
                     cards.Add(card);
+                    index++;
                 }
             }
 
