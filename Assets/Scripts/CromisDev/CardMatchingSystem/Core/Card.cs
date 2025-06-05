@@ -11,18 +11,11 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField] private Sprite backSprite;
         [SerializeField] private AnimationCurve flipCurve;
         [SerializeField] private float flipDuration = 0.5f;
-
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         private CardState currentState = CardState.Hidden;
        
         public bool IsFlipping { get; private set; }
         public string CardId { get; private set; }
-
-        private void Awake()
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            spriteRenderer.sprite = backSprite;
-        }
 
         private void UpdateSprite()
         {
