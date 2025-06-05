@@ -12,8 +12,8 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField] private AnimationCurve flipCurve;
         [SerializeField] private float flipDuration = 0.5f;
         [SerializeField] private SpriteRenderer spriteRenderer;
-        private CardState currentState = CardState.Hidden;
 
+        public CardState CardState { get; private set; } = CardState.Hidden;
         public bool IsFlipping { get; private set; }
         public string CardId { get; private set; }
 
@@ -22,12 +22,13 @@ namespace CromisDev.CardMatchingSystem
 
         private void OnMouseDown()
         {
+            if (!GameController.ShouldInteract) return;
             Flip();
         }
 
         private void UpdateSprite()
         {
-            spriteRenderer.sprite = currentState == CardState.Hidden ? backSprite : frontSprite;
+            spriteRenderer.sprite = CardState == CardState.Hidden ? backSprite : frontSprite;
         }
 
         public void Initialize(CardState initialState, Sprite frontSprite, Sprite backSprite)
@@ -35,7 +36,7 @@ namespace CromisDev.CardMatchingSystem
             this.frontSprite = frontSprite;
             this.backSprite = backSprite;
             CardId = frontSprite.name;
-            currentState = initialState;
+            CardState = initialState;
             UpdateSprite();
         }
 
@@ -51,7 +52,7 @@ namespace CromisDev.CardMatchingSystem
         {
             IsFlipping = true;
             yield return ScaleCard(1f, 0f);
-            currentState = currentState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
+            CardState = CardState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
             UpdateSprite();
             yield return ScaleCard(0f, 1f);
 
@@ -60,13 +61,14 @@ namespace CromisDev.CardMatchingSystem
 
         private IEnumerator ScaleCard(float startScale, float endScale)
         {
+            float flipTime = flipDuration * 0.5f;
             float elapsedTime = 0f;
             Vector3 originalScale = new(startScale, transform.localScale.y, transform.localScale.z);
             Vector3 targetScale = new(endScale, transform.localScale.y, transform.localScale.z);
 
-            while (elapsedTime < flipDuration)
+            while (elapsedTime < flipTime)
             {
-                float t = elapsedTime / flipDuration;
+                float t = elapsedTime / flipTime;
                 float curveValue = flipCurve.Evaluate(t);
                 transform.localScale = Vector3.Lerp(originalScale, targetScale, curveValue);
                 elapsedTime += Time.deltaTime;

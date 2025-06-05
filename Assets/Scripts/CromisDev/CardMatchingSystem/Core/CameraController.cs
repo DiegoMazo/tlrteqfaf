@@ -10,13 +10,10 @@ namespace CromisDev.CardMatchingSystem
         {
             BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
         }
-        private void OnDestroy()
-        {
-            BoardLayoutController.OnBoardCreated -= BoardLayoutController_OnBoardCreated;
-        }
 
         private void BoardLayoutController_OnBoardCreated()
         {
+            BoardLayoutController.OnBoardCreated -= BoardLayoutController_OnBoardCreated;
             AdjustCameraToBoard();
         }
 

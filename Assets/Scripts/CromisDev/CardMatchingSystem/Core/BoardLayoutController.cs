@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CromisDev.Extensions.Collections;
 using UnityEngine;
 
@@ -33,24 +36,29 @@ namespace CromisDev.CardMatchingSystem
             }
         }
 
-        private void Start()
+        public static async Task RevelaCardsAsync(float revealTime)
         {
-            GenerateBoard();
+            List<Card> filteredCards = Instance.cards.Where(c => c.CardState == CardState.Hidden).ToList();
+
+            filteredCards.ForEach(c => c.Flip());
+            await Task.Delay((int)(revealTime * 1000));
+            filteredCards.ForEach(c => c.Flip());
         }
 
-        public void GenerateBoard()
+        public static void GenerateBoard()
         {
-            Vector3 cardSize = cardPrefab.GetSize;
-            int totalCards = gridSize.x * gridSize.y;
+            Vector2Int gridSize = Instance.gridSize;
 
-            Width = gridSize.x * cardSize.x + (gridSize.x - 1) * horizontalPadding;
-            Height = gridSize.y * cardSize.z + (gridSize.y - 1) * verticalPadding;
+            Vector3 cardSize = Instance.cardPrefab.GetSize;
+            int totalCards = Instance.gridSize.x * Instance.gridSize.y;
 
+            Width = gridSize.x * cardSize.x + (gridSize.x - 1) * Instance.horizontalPadding;
+            Height = gridSize.y * cardSize.z + (gridSize.y - 1) * Instance.verticalPadding;
 
             Vector3 origin = new(-Width / 2f + cardSize.x / 2f, 0f, Height / 2f - cardSize.z / 2f);
 
-            Sprite back = deckDataSO.GetRandomCardBack();
-            List<Sprite> uniqueFronts = deckDataSO.GetUniqueFronts(totalCards / 2);
+            Sprite back = Instance.deckDataSO.GetRandomCardBack();
+            List<Sprite> uniqueFronts = Instance.deckDataSO.GetUniqueFronts(totalCards / 2);
 
             List<Sprite> allFronts = new();
 
@@ -68,14 +76,14 @@ namespace CromisDev.CardMatchingSystem
                 for (int x = 0; x < gridSize.x; x++)
                 {
                     Vector3 position = origin + new Vector3(
-                        x * (cardSize.x + horizontalPadding),
+                        x * (cardSize.x + Instance.horizontalPadding),
                         0f,
-                        -y * (cardSize.z + verticalPadding)
+                        -y * (cardSize.z + Instance.verticalPadding)
                     );
 
-                    Card card = Instantiate(cardPrefab, position, Quaternion.identity, transform);
+                    Card card = Instantiate(Instance.cardPrefab, position, Quaternion.identity, Instance.transform);
                     card.Initialize(CardState.Hidden, allFronts[index], back);
-                    cards.Add(card);
+                    Instance.cards.Add(card);
                     index++;
                 }
             }
