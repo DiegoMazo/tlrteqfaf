@@ -13,11 +13,17 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField] private float flipDuration = 0.5f;
         [SerializeField] private SpriteRenderer spriteRenderer;
         private CardState currentState = CardState.Hidden;
-       
+
         public bool IsFlipping { get; private set; }
         public string CardId { get; private set; }
 
-        public Vector3 GetSize => spriteRenderer.bounds.size; 
+        public Vector3 GetSize => spriteRenderer.bounds.size;
+
+
+        private void OnMouseDown()
+        {
+            Flip();
+        }
 
         private void UpdateSprite()
         {
@@ -45,10 +51,10 @@ namespace CromisDev.CardMatchingSystem
         {
             IsFlipping = true;
             yield return ScaleCard(1f, 0f);
+            currentState = currentState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
             UpdateSprite();
             yield return ScaleCard(0f, 1f);
 
-            currentState = currentState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
             IsFlipping = false;
         }
 
