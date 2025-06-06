@@ -10,7 +10,7 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField, Tooltip("Speed at which the score changes (points per second).")]
         private float updateSpeed = 100f;
 
-        private float currentScore = 0f;  // <- usar float para animar suavemente
+        private float currentScore = 0f;
         private uint targetScore = 0;
 
         private void OnEnable()
