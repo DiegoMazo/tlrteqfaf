@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using CromisDev.AudioSystem;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -80,6 +82,19 @@ namespace CromisDev.CardMatchingSystem
             cardMatchHandler.StartListening();
             scoreController.StartListening();
             ShouldInteract = true;
+
+            CardMatchHandler.OnCardMatched += OnCardMatched;
+            CardMatchHandler.OnMismatched += OnMismatched;
+        }
+
+        private void OnMismatched()
+        {
+            AudioManager.PlaySFX(AudioClipID.MISMATCHING, 1);
+        }
+
+        private void OnCardMatched(uint _)
+        {
+            AudioManager.PlaySFX(AudioClipID.MATCHING, 1);
         }
 
         #region Testing methods

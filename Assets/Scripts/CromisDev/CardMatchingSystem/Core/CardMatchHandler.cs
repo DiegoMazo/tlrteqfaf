@@ -11,8 +11,8 @@ namespace CromisDev.CardMatchingSystem
         private readonly float delay;
         private readonly List<Card> activeCards = new();
         private readonly HashSet<Card> pendingComparisons = new();
-
         public static event Action<uint> OnCardMatched;
+        public static event Action OnMismatched;
 
         public CardMatchHandler(MonoBehaviour coroutineRunner, float delay = 0.5f)
         {
@@ -70,6 +70,8 @@ namespace CromisDev.CardMatchingSystem
             {
                 _ = a.Flip();
                 _ = b.Flip();
+
+                OnMismatched?.Invoke();
             }
 
             pendingComparisons.Remove(a);
