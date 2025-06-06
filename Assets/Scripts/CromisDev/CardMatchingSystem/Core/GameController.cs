@@ -8,7 +8,6 @@ namespace CromisDev.CardMatchingSystem
 {
     public class GameController : MonoBehaviour
     {
-        private const string SAVE_FILE_NAME = "save_data";
         private const float ON_GAME_COMPLETED_FEEDBACK_DELAY = 0.5f;
         private const int START_DELAY = 500;
         public static GameController Instance { get; private set; }
@@ -50,7 +49,7 @@ namespace CromisDev.CardMatchingSystem
 
         public async void LoadGame()
         {
-            GameSaveData data = await SaveCardGameManager.LoadAsync(SAVE_FILE_NAME);
+            GameSaveData data = await SaveCardGameManager.LoadAsync();
 
             ScoreController.LoadScore(data.score);
             ShouldInteract = data.shouldInteract;
@@ -118,7 +117,7 @@ namespace CromisDev.CardMatchingSystem
         #region Testing methods
 #if UNITY_EDITOR
         [ContextMenu(nameof(TriggerNewGame))] public void TriggerNewGame() => RequestNewGame();
-        [ContextMenu(nameof(SaveGame))] public void SaveGame() => SaveCardGameManager.SaveGame(SAVE_FILE_NAME);
+        [ContextMenu(nameof(SaveGame))] public void SaveGame() => SaveCardGameManager.SaveGame();
         [ContextMenu(nameof(TriggerLoadGame))] public void TriggerLoadGame() => LoadGame();
 #endif
 

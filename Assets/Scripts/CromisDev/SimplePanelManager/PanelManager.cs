@@ -3,9 +3,13 @@ using UnityEngine;
 namespace CromisDev.SimplePanelSystem
 {
     public enum PanelType
-    {
+    {   /*In Game Panels*/
         IN_GAME_MAIN,
-        IN_GAME_GAMEOVER
+        IN_GAME_GAMEOVER,
+
+        /*Menu Panels*/
+        MENU_MAIN,
+        NEW_GAME
     }
 
     public class PanelManager : MonoBehaviour
