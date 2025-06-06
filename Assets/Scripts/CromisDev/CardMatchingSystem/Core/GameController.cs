@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using CromisDev.AudioSystem;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace CromisDev.CardMatchingSystem
     public class GameController : MonoBehaviour
     {
         private const string SAVE_FILE_NAME = "save_data";
+        private const float ON_GAME_COMPLETED_FEEDBACK_DELAY = 0.5f;
         private const int START_DELAY = 500;
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
@@ -92,11 +94,24 @@ namespace CromisDev.CardMatchingSystem
             AudioManager.PlaySFX(AudioClipID.MISMATCHING, 1);
         }
 
-        private void OnCardMatched(uint _)
+        private void OnCardMatched(uint matchedCardId)
         {
-            AudioManager.PlaySFX(AudioClipID.MATCHING, 1);
+            AudioManager.PlaySFX(AudioClipID.MATCHING, volume: 1f);
+            bool isGameComplete = BoardLayoutController.Cards.All(card => card.IsMatched);
+
+            if (isGameComplete)
+            {
+                ShouldInteract = false;
+
+                Invoke(nameof(OnGameCompleted), ON_GAME_COMPLETED_FEEDBACK_DELAY);
+            }
         }
 
+
+        private void OnGameCompleted()
+        {
+            AudioManager.PlaySFX(AudioClipID.GAMEOVER, 1);
+        }
         #region Testing methods
 #if UNITY_EDITOR
         [ContextMenu(nameof(TriggerNewGame))] public void TriggerNewGame() => RequestNewGame();
