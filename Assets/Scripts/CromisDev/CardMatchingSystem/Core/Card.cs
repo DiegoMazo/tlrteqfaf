@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System;
 using System.Threading;
+using CromisDev.AudioSystem;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -65,6 +66,7 @@ namespace CromisDev.CardMatchingSystem
 
             try
             {
+                AudioManager.PlaySFX(AudioClipID.FLIP, 1);
                 await ScaleCardAsync(1f, 0f, token);
                 CardState = CardState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
                 UpdateSprite();

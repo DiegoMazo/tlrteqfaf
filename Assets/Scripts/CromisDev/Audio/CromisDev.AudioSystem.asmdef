@@ -1,3 +1,16 @@
 {
-	"name": "CromisDev.AudioSystem"
+    "name": "CromisDev.AudioSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3dce379087e475241b3334c231cc9e73"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

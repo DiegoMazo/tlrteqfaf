@@ -19,13 +19,13 @@ namespace CromisDev.AudioSystem
             }
         }
 
-        public AudioClip GetClip(string id)
+        public bool TryGetClip(string id, out AudioClip clip)
         {
-            if (clipMap.TryGetValue(id, out var clip))
-                return clip;
+            if (clipMap.TryGetValue(id, out  clip))
+                return true;
 
             Debug.LogWarning($"Audio clip not found for id: {id}");
-            return null;
+            return false;
         }
     }
 }

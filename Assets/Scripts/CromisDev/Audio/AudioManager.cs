@@ -1,37 +1,35 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Audio;
+using CromisDev.Pooling;
 
 namespace CromisDev.AudioSystem
 {
-
-    public enum AudioChannelType { Global, UI, BGM, SFX }
-
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
 
-        [SerializeField] private AudioMixer audioMixer;
-        [SerializeField] private AudioSource BGMSource, SFXSource, UISource;
-        [SerializeField] private AudioChannel[] channels;
-        public static event Action OnInitialized;
-        private const float MUTED_DB = -80f;
+        [Header("SFX Pooling")]
+        [SerializeField] private PoolableAudioSource sfxPrefab;
+        [SerializeField] private AudioSource uiAudioSource;
+        [SerializeField] private AudioLibrarySO audioLibrarySO;
+        [SerializeField] private Transform sfxParent;
+        [SerializeField] private uint initialPoolSize = 5;
 
-        private Dictionary<AudioChannelType, AudioChannel> channelDictionary;
+        private ObjectPooler<PoolableAudioSource> sfxPool;
+
+        public static event Action OnInitialized;
 
         private void Awake()
         {
             if (Instance == null)
                 Instance = this;
-            else if (Instance != this)
+            else
             {
                 DestroyImmediate(gameObject);
                 return;
             }
-            channelDictionary = channels.ToDictionary(c => c.channelType, c => c);
+            audioLibrarySO.Initialize();
+            sfxPool = new ObjectPooler<PoolableAudioSource>(sfxPrefab, initialPoolSize, sfxParent);
         }
 
         private void Start()
@@ -44,100 +42,34 @@ namespace CromisDev.AudioSystem
             OnInitialized = null;
         }
 
-        private bool TryGetChannel(AudioChannelType type, out AudioChannel audioChannel)
+        public static void PlaySFX(AudioClip clip, float volume = 1f)
         {
-            if (channelDictionary != null && channelDictionary.TryGetValue(type, out audioChannel))
+            var source = Instance.sfxPool.GetPooledObject(true);
+            if (source == null)
             {
-                return true;
+                throw new InvalidOperationException("No audio source available from the pool.");
             }
-            else
-            {
-                Debug.LogWarning($"Channel {type} not found!");
-                audioChannel = null;
-                return false;
-            }
+
+            source.Show();
+            source.Play(clip, volume);
         }
 
-        public static void SetVolume(AudioChannelType channelType, float volume)
+        public static void PlaySFX(string sfxID, float volume = 1f)
         {
-            if (Instance.TryGetChannel(channelType, out AudioChannel channel))
+            if (!Instance.audioLibrarySO.TryGetClip(sfxID, out AudioClip clip))
             {
-                channel.SetVolume(Instance.audioMixer, volume);
+                throw new ArgumentException($"SFX ID '{sfxID}' not found in AudioLibrary.");
             }
+            PlaySFX(clip, volume);
         }
 
-        public static void SetMute(AudioChannelType channelType, bool mute)
+        public static void PlayUISFX(AudioClip clip, float volume = 1f)
         {
-            if (Instance.TryGetChannel(channelType, out AudioChannel channel))
-            {
-                channel.SetMute(Instance.audioMixer, mute, MUTED_DB);
-            }
-        }
-
-        public static void SetGlobalVolume(float volume) => SetVolume(AudioChannelType.Global, volume);
-        public static void SetUIVolume(float volume) => SetVolume(AudioChannelType.UI, volume);
-        public static void SetMusicVolume(float volume) => SetVolume(AudioChannelType.BGM, volume);
-        public static void SetSoundEffectsVolume(float volume) => SetVolume(AudioChannelType.SFX, volume);
-        public static void SetGlobalMute(bool mute) => SetMute(AudioChannelType.Global, mute);
-        public static void SetUIMute(bool mute) => SetMute(AudioChannelType.UI, mute);
-        public static void SetMusicMute(bool mute) => SetMute(AudioChannelType.BGM, mute);
-        public static void SetSoundEffectsMute(bool mute) => SetMute(AudioChannelType.SFX, mute);
-
-        public static void PlayUISFX(AudioClip sfx) => Instance.UISource.PlayOneShot(sfx);
-        public static void PlaySFX(AudioClip sfx) => Instance.SFXSource.PlayOneShot(sfx);
-
-        public static void PlayBackgroundMusic(AudioClip clip)
-        {
-            Instance.BGMSource.clip = clip;
-            Instance.BGMSource.Play();
-        }
-
-        public static async Task TransitionToAsync(AudioClip newClip, float fadeDuration)
-        {
-            float startVolume = Instance.BGMSource.volume;
-            for (float t = 0.0f; t < fadeDuration; t += Time.deltaTime)
-            {
-                Instance.BGMSource.volume = Mathf.Lerp(startVolume, 0.0f, t / fadeDuration);
-                await Task.Yield();
-            }
-            Instance.BGMSource.Stop();
-            Instance.BGMSource.volume = startVolume;
-            Instance.BGMSource.clip = newClip;
-            Instance.BGMSource.Play();
+            Instance.uiAudioSource.volume = volume;
+            Instance.uiAudioSource.PlayOneShot(clip);
         }
     }
-
-    [Serializable]
-    public class AudioChannel
-    {
-        public AudioChannelType channelType;
-        public string mixerParameter;
-        public float maxVolume = 1f;
-        private float lastVolume = 1f;
-        public float LastVolume => lastVolume;
-
-        public void SetVolume(AudioMixer mixer, float volume)
-        {
-            lastVolume = Mathf.Min(volume, maxVolume);
-            mixer.SetFloat(mixerParameter, Mathf.Log10(lastVolume) * 20);
-        }
-
-        public void SetMute(AudioMixer mixer, bool mute, float mutedDb = -80f)
-        {
-            if (mute)
-            {
-                mixer.SetFloat(mixerParameter, mutedDb);
-            }
-            else
-            {
-                lastVolume = Mathf.Min(lastVolume, maxVolume);
-                mixer.SetFloat(mixerParameter, Mathf.Log10(lastVolume) * 20);
-            }
-        }
-    }
-
 }
-
 
 
 
