@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CromisDev.AudioSystem;
 using CromisDev.SimplePanelSystem;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -33,6 +34,15 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler = new CardMatchHandler(this);
             scoreController = new();
+
+            if (SaveCardGameManager.Exists())
+            {
+                LoadGame();
+            }
+            else
+            {
+                RequestNewGame();
+            }
         }
 
         private void OnDestroy()
@@ -41,10 +51,28 @@ namespace CromisDev.CardMatchingSystem
             scoreController.StopListening();
         }
 
+        private Vector2Int LoadSavedLayout(string key, Vector2Int defaultValue)
+        {
+            if (!PlayerPrefs.HasKey(key))
+                return defaultValue;
+
+            string saved = PlayerPrefs.GetString(key);
+            string[] parts = saved.Split(',');
+
+            if (parts.Length != 2)
+                return defaultValue;
+
+            if (int.TryParse(parts[0], out int x) && int.TryParse(parts[1], out int y))
+                return new Vector2Int(x, y);
+
+            return defaultValue;
+        }
+
         public void RequestNewGame()
         {
             BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
-            BoardLayoutController.GenerateBoard();
+            Vector2Int gridSize = LoadSavedLayout(GridLayoutDropdownGenerator.LAYOUT_PREFKEY, Vector2Int.one * 2);
+            BoardLayoutController.GenerateBoard(gridSize);
         }
 
         public async void LoadGame()

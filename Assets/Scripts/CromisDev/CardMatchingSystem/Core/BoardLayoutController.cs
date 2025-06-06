@@ -14,7 +14,6 @@ namespace CromisDev.CardMatchingSystem
         [Header("Card and Layout Settings")]
         [SerializeField] private Card cardPrefab;
         [SerializeField] private CardDeckDataSO deckDataSO;
-        [SerializeField] private Vector2Int gridSize = new(4, 4);
         [SerializeField] private float horizontalPadding = 0.2f;
         [SerializeField] private float verticalPadding = 0.2f;
         private readonly List<Card> cards = new();
@@ -46,12 +45,11 @@ namespace CromisDev.CardMatchingSystem
                 Instance.cards.Where(c => c.CardState == CardState.Hidden && !c.IsMatched).Select(c => c.PeekAsync(revealTime))
             );
         }
-        public static void GenerateBoard()
+        public static void GenerateBoard(Vector2Int gridSize)
         {
-            Vector2Int gridSize = Instance.gridSize;
 
             Vector3 cardSize = Instance.cardPrefab.GetSize;
-            int totalCards = Instance.gridSize.x * Instance.gridSize.y;
+            int totalCards = gridSize.x * gridSize.y;
 
             Width = gridSize.x * cardSize.x + (gridSize.x - 1) * Instance.horizontalPadding;
             Height = gridSize.y * cardSize.z + (gridSize.y - 1) * Instance.verticalPadding;
