@@ -5,7 +5,6 @@ namespace CromisDev.SimplePanelSystem
     [RequireComponent(typeof(CanvasGroup))]
     public class Panel : MonoBehaviour
     {
-        [Header("Transition Settings")]
         [SerializeField] private float fadeDuration = 0.3f;
         [SerializeField] private bool startHidden = true;
 
@@ -16,7 +15,7 @@ namespace CromisDev.SimplePanelSystem
             gameObject.SetActive(value);
         }
 
-        protected virtual void Awake()
+        public virtual void Initialize()
         {
             canvasGroup = GetComponent<CanvasGroup>();
 

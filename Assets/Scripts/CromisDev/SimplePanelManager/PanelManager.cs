@@ -4,12 +4,12 @@ namespace CromisDev.SimplePanelSystem
 {
     public enum PanelType
     {
-  
+        IN_GAME_MAIN,
+        IN_GAME_GAMEOVER
     }
 
     public class PanelManager : MonoBehaviour
     {
-
         [System.Serializable]
         private struct PanelEntry
         {
@@ -23,7 +23,7 @@ namespace CromisDev.SimplePanelSystem
         {
             foreach (var entry in panels)
             {
-                entry.panel.Hide();
+                entry.panel.Initialize();
             }
         }
         public void ShowPanel(PanelType type)
