@@ -1,3 +1,4 @@
+using CromisDev.AudioSystem;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -7,9 +8,11 @@ namespace CromisDev.CardMatchingSystem
         private const string SAVE_FILE_NAME = "save_data";
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
+        [SerializeField] private AudioLibrarySO audioLibrarySO;
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
         public static bool ShouldInteract { get; private set; }
+        public static AudioLibrarySO AudioLibrary => Instance.audioLibrarySO;
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
 
@@ -21,6 +24,7 @@ namespace CromisDev.CardMatchingSystem
                 Destroy(gameObject);
 
             gameSettingsData = gameSettingsSO.Data;
+            audioLibrarySO.Initialize();
         }
 
         private void Start()
