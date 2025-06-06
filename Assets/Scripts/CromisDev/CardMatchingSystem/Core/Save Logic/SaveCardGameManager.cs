@@ -1,16 +1,16 @@
-
-
 using System;
+using System.Threading.Tasks;
 using CromisDev.SaveSystem;
 
 namespace CromisDev.CardMatchingSystem
 {
     public class SaveCardGameManager : SaveManager<GameSaveData>
     {
-        public static async void SaveGame(string fileName)
+        public static string SAVE_FILE_NAME = "save_data";
+        public static async void SaveGame()
         {
             GameSaveData data = CreateSaveData();
-            await SaveAsync(data, fileName);
+            await SaveAsync(data, SAVE_FILE_NAME);
         }
 
         public static GameSaveData CreateSaveData()
@@ -36,5 +36,10 @@ namespace CromisDev.CardMatchingSystem
 
             return data;
         }
+
+        public static async Task<GameSaveData> LoadAsync() => await LoadAsync(SAVE_FILE_NAME);
+
+        public static bool Exists() => Exists(SAVE_FILE_NAME);
+
     }
 }
