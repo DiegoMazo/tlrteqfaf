@@ -1,5 +1,6 @@
 using CromisDev.CardMatchingSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace CromisDev.SimplePanelSystem
@@ -10,6 +11,8 @@ namespace CromisDev.SimplePanelSystem
         [Header("UI Buttons")]
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button loadGameButton;
+        [SerializeField] private string ingameSceneName;
+        [SerializeField] private PanelManager panelManager;
 
         public override void Initialize()
         {
@@ -23,10 +26,17 @@ namespace CromisDev.SimplePanelSystem
 
         private void OnNewGameClicked()
         {
+            if (SaveCardGameManager.Exists())
+            {
+                SaveCardGameManager.Delete();
+            }
+
+            panelManager.ShowPanel(PanelType.NEW_GAME);
         }
 
         private void OnLoadGameClicked()
         {
+            SceneManager.LoadScene(ingameSceneName);
         }
 
         private void OnDestroy()
