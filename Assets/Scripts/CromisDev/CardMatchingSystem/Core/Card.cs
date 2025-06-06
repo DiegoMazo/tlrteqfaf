@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -23,21 +24,12 @@ namespace CromisDev.CardMatchingSystem
 
         public Vector3 GetSize => spriteRenderer.bounds.size;
 
+        private CancellationTokenSource flipCts;
+
         private void OnMouseDown()
         {
             if (!GameController.ShouldInteract || IsFlipping || IsMatched) return;
             _ = Flip();
-        }
-
-        public void SetMatched()
-        {
-            IsMatched = true;
-            spriteRenderer.color = Color.green;
-        }
-
-        private void UpdateSprite()
-        {
-            spriteRenderer.sprite = CardState == CardState.Hidden ? backSprite : frontSprite;
         }
 
         public void Initialize(CardState initialState, Sprite frontSprite, Sprite backSprite)
@@ -49,6 +41,11 @@ namespace CromisDev.CardMatchingSystem
             UpdateSprite();
         }
 
+        private void UpdateSprite()
+        {
+            spriteRenderer.sprite = CardState == CardState.Hidden ? backSprite : frontSprite;
+        }
+
         public async Task PeekAsync(float revealTime = 0.5f)
         {
             await Flip();
@@ -58,14 +55,22 @@ namespace CromisDev.CardMatchingSystem
 
         public async Task Flip()
         {
+            flipCts?.Cancel();
+            flipCts = new CancellationTokenSource();
+            CancellationToken token = flipCts.Token;
+
             float flipTime = flipDuration * 0.5f;
 
             IsFlipping = true;
 
-            await ScaleCardAsync(1f, 0f);
-            CardState = CardState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
-            UpdateSprite();
-            await ScaleCardAsync(0f, 1f);
+            try
+            {
+                await ScaleCardAsync(1f, 0f, token);
+                CardState = CardState == CardState.Hidden ? CardState.Revealed : CardState.Hidden;
+                UpdateSprite();
+                await ScaleCardAsync(0f, 1f, token);
+            }
+            catch (OperationCanceledException) { }
 
             IsFlipping = false;
 
@@ -75,7 +80,7 @@ namespace CromisDev.CardMatchingSystem
             }
         }
 
-        private async Task ScaleCardAsync(float startScale, float endScale)
+        private async Task ScaleCardAsync(float startScale, float endScale, CancellationToken token)
         {
             float flipTime = flipDuration * 0.5f;
             float elapsedTime = 0f;
@@ -84,6 +89,8 @@ namespace CromisDev.CardMatchingSystem
 
             while (elapsedTime < flipTime)
             {
+                token.ThrowIfCancellationRequested();
+
                 float t = elapsedTime / flipTime;
                 float curveValue = flipCurve.Evaluate(t);
                 transform.localScale = Vector3.Lerp(originalScale, targetScale, curveValue);
@@ -92,6 +99,25 @@ namespace CromisDev.CardMatchingSystem
             }
 
             transform.localScale = targetScale;
+        }
+
+        public async void SetMatched()
+        {
+            IsMatched = true;
+
+            flipCts?.Cancel();
+
+            if (CardState == CardState.Hidden)
+            {
+                IsFlipping = true;
+                await ScaleCardAsync(1f, 0f, CancellationToken.None);
+                CardState = CardState.Revealed;
+                UpdateSprite();
+                await ScaleCardAsync(0f, 1f, CancellationToken.None);
+                IsFlipping = false;
+            }
+
+            spriteRenderer.color = Color.green;
         }
     }
 }
