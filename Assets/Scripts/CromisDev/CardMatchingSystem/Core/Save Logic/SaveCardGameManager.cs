@@ -29,7 +29,6 @@ namespace CromisDev.CardMatchingSystem
                 data.cards.Add(new SerializableCardData
                 {
                     cardId = card.CardId,
-                    state = card.CardState,
                     position = card.transform.position,
                     isMatched = card.IsMatched
                 });

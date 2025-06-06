@@ -5,7 +5,7 @@ namespace CromisDev.CardMatchingSystem
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private Camera cameraComponent;
-        [SerializeField] private Vector2 marginPercentage = new Vector2(0.1f, 0.1f); // 10% de margen
+        [SerializeField] private Vector2 marginPercentage = new(0.1f, 0.1f);
 
         private void Awake()
         {
@@ -21,9 +21,7 @@ namespace CromisDev.CardMatchingSystem
 
         private void OnSizeCalculated(float boardWidth, float boardHeight)
         {
-            Vector2 absoluteMargins = new(
-                boardWidth * marginPercentage.x,
-                boardHeight * marginPercentage.y);
+            Vector2 absoluteMargins = new(boardWidth * marginPercentage.x, boardHeight * marginPercentage.y);
 
             float requiredViewportWidth = boardWidth + absoluteMargins.x * 2;
             float requiredViewportHeight = boardHeight + absoluteMargins.y * 2;

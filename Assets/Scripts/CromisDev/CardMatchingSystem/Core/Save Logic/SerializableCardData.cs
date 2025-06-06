@@ -7,7 +7,6 @@ namespace CromisDev.CardMatchingSystem
     public class SerializableCardData
     {
         public string cardId;
-        public CardState state;
         public Vector3 position;
         public bool isMatched;
     }

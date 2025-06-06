@@ -127,6 +127,8 @@ namespace CromisDev.CardMatchingSystem
             IsMatched = true;
             flipCts?.Cancel();
             spriteRenderer.color = Color.green;
+            CardState = CardState.Revealed;
+            UpdateSprite();
         }
     }
 }

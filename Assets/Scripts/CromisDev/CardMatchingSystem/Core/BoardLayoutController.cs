@@ -114,7 +114,7 @@ namespace CromisDev.CardMatchingSystem
                 }
 
                 Card card = Instantiate(Instance.cardPrefab, cardData.position, Quaternion.identity, Instance.transform);
-                card.Initialize(cardData.state, front, back);
+                card.Initialize(CardState.Hidden, front, back);
 
                 if (cardData.isMatched)
                 {

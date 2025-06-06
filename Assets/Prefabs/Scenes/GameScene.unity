@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraComponent: {fileID: 140515797}
-  cameraMargin: {x: 0.5, y: 1}
+  marginPercentage: {x: 0.1, y: 0.1}
 --- !u!1 &339475415
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 2036003881963757847, guid: d2b41c65691432844bed7d095024e2b3, type: 3}
   deckDataSO: {fileID: 11400000, guid: 187c4f49a82af4046818bc8d6ca1008f, type: 2}
-  gridSize: {x: 2, y: 4}
+  gridSize: {x: 4, y: 4}
   horizontalPadding: 0.2
   verticalPadding: 0.2
 --- !u!1 &605691161
