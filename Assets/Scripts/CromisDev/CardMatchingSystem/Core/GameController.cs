@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -5,6 +6,7 @@ namespace CromisDev.CardMatchingSystem
     public class GameController : MonoBehaviour
     {
         private const string SAVE_FILE_NAME = "save_data";
+        private const int START_DELAY = 500;
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
         private static GameSettingsData gameSettingsData;
@@ -35,7 +37,7 @@ namespace CromisDev.CardMatchingSystem
             scoreController.StopListening();
         }
 
-        public void StartNewGame()
+        public void RequestNewGame()
         {
             BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
             BoardLayoutController.GenerateBoard();
@@ -51,7 +53,7 @@ namespace CromisDev.CardMatchingSystem
 
             if (!succed)
             {
-                StartNewGame();
+                RequestNewGame();
             }
             else
             {
@@ -63,6 +65,7 @@ namespace CromisDev.CardMatchingSystem
         {
             BoardLayoutController.OnBoardCreated -= BoardLayoutController_OnBoardCreated;
 
+            await Task.Delay(START_DELAY);
             if (gameSettingsData.InitialRevealCards)
             {
                 ShouldInteract = false;
@@ -81,7 +84,7 @@ namespace CromisDev.CardMatchingSystem
 
         #region Testing methods
 #if UNITY_EDITOR
-        [ContextMenu(nameof(TriggerNewGame))] public void TriggerNewGame() => StartNewGame();
+        [ContextMenu(nameof(TriggerNewGame))] public void TriggerNewGame() => RequestNewGame();
         [ContextMenu(nameof(SaveGame))] public void SaveGame() => SaveCardGameManager.SaveGame(SAVE_FILE_NAME);
         [ContextMenu(nameof(TriggerLoadGame))] public void TriggerLoadGame() => LoadGame();
 #endif

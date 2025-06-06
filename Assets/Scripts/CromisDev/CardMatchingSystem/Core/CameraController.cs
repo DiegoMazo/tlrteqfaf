@@ -5,26 +5,33 @@ namespace CromisDev.CardMatchingSystem
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private Camera cameraComponent;
-        [SerializeField] private Vector2 cameraMargin = Vector2.one * 0.5f;
+        [SerializeField] private Vector2 marginPercentage = new Vector2(0.1f, 0.1f); // 10% de margen
+
         private void Awake()
         {
-            BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
-        }
-
-        private void BoardLayoutController_OnBoardCreated()
-        {
-            BoardLayoutController.OnBoardCreated -= BoardLayoutController_OnBoardCreated;
-            AdjustCameraToBoard();
-        }
-
-        private void AdjustCameraToBoard()
-        {
-            float aspectRatio = (float)Screen.width / Screen.height;
-
-            float neededHeight = BoardLayoutController.Height / 2f + cameraMargin.y;
-            float neededWidth = BoardLayoutController.Width / (2f * aspectRatio) + cameraMargin.x;
+            BoardLayoutController.OnSizeCalculated += OnSizeCalculated;
             cameraComponent.orthographic = true;
-            cameraComponent.orthographicSize = Mathf.Max(neededHeight, neededWidth);
+            cameraComponent.orthographicSize = 1f;
+        }
+
+        private void OnDestroy()
+        {
+            BoardLayoutController.OnSizeCalculated -= OnSizeCalculated;
+        }
+
+        private void OnSizeCalculated(float boardWidth, float boardHeight)
+        {
+            Vector2 absoluteMargins = new(
+                boardWidth * marginPercentage.x,
+                boardHeight * marginPercentage.y);
+
+            float requiredViewportWidth = boardWidth + absoluteMargins.x * 2;
+            float requiredViewportHeight = boardHeight + absoluteMargins.y * 2;
+
+            float horizontalSize = requiredViewportWidth / (2f * cameraComponent.aspect);
+            float verticalSize = requiredViewportHeight / 2f;
+
+            cameraComponent.orthographicSize = Mathf.Max(horizontalSize, verticalSize);
         }
     }
 }

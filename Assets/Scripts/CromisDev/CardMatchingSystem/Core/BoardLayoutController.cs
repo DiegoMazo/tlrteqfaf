@@ -23,6 +23,8 @@ namespace CromisDev.CardMatchingSystem
         public static float Width { get; private set; }
         public static float Height { get; private set; }
 
+        public static Action<float, float> OnSizeCalculated;
+
         public static IReadOnlyList<Card> Cards => Instance.cards;
 
         private void Awake()
@@ -53,6 +55,8 @@ namespace CromisDev.CardMatchingSystem
 
             Width = gridSize.x * cardSize.x + (gridSize.x - 1) * Instance.horizontalPadding;
             Height = gridSize.y * cardSize.z + (gridSize.y - 1) * Instance.verticalPadding;
+
+            OnSizeCalculated?.Invoke(Width, Height);
 
             Vector3 origin = new(-Width / 2f + cardSize.x / 2f, 0f, Height / 2f - cardSize.z / 2f);
 
@@ -96,6 +100,7 @@ namespace CromisDev.CardMatchingSystem
             Sprite back = Instance.deckDataSO.GetRandomCardBack();
             Width = data.GridWidth;
             Height = data.GridHeight;
+            OnSizeCalculated?.Invoke(Width, Height);
 
             foreach (var cardData in data.cards)
             {
