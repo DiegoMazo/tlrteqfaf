@@ -6,15 +6,7 @@ namespace CromisDev.AudioSystem
     [CreateAssetMenu(menuName = "Audio/Audio Library")]
     public class AudioLibrarySO : ScriptableObject
     {
-        [System.Serializable]
-        public struct AudioEntry
-        {
-            public string id;
-            public AudioClip clip;
-        }
-
-        [SerializeField] private List<AudioEntry> entries;
-
+        [SerializeField] private List<AudioClip> entries;
         private Dictionary<string, AudioClip> clipMap;
 
         public void Initialize()
@@ -22,8 +14,8 @@ namespace CromisDev.AudioSystem
             clipMap = new Dictionary<string, AudioClip>();
             foreach (var entry in entries)
             {
-                if (!clipMap.ContainsKey(entry.id))
-                    clipMap[entry.id] = entry.clip;
+                if (!clipMap.ContainsKey(entry.name))
+                    clipMap[entry.name] = entry;
             }
         }
 
