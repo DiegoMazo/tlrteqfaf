@@ -40,6 +40,7 @@ namespace CromisDev.CardMatchingSystem
         public static async Task<GameSaveData> LoadAsync() => await LoadAsync(SAVE_FILE_NAME);
 
         public static bool Exists() => Exists(SAVE_FILE_NAME);
+        public static void Delete() => Delete(SAVE_FILE_NAME);
 
     }
 }
