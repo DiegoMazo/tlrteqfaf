@@ -1,22 +1,17 @@
-using System;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
 {
     public class GameController : MonoBehaviour
     {
+        private const string SAVE_FILE_NAME = "save_Data";
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
-
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
-
         public static bool ShouldInteract { get; private set; }
-
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
-
-        public static event Action<uint> OnCardMatched;
 
         private void Awake()
         {
@@ -32,8 +27,6 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler = new CardMatchHandler(this);
             scoreController = new();
-
-            StartGame();
         }
 
         private void OnDestroy()
@@ -42,10 +35,24 @@ namespace CromisDev.CardMatchingSystem
             scoreController.StopListening();
         }
 
-        public void StartGame()
+        public void StartNewGame()
         {
             BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
             BoardLayoutController.GenerateBoard();
+        }
+
+        public async void LoadGame()
+        {
+            GameSaveData data = await SaveCardGameManager.LoadAsync(SAVE_FILE_NAME);
+
+            ScoreController.LoadScore(data.score);
+            ShouldInteract = data.shouldInteract;
+            bool succed = BoardLayoutController.TryLoadData(data);
+
+            if (!succed)
+            {
+                StartNewGame();
+            }
         }
 
         private async void BoardLayoutController_OnBoardCreated()
@@ -61,11 +68,6 @@ namespace CromisDev.CardMatchingSystem
             cardMatchHandler.StartListening();
             scoreController.StartListening();
             ShouldInteract = true;
-        }
-
-        public static void HandleOnCardMatched()
-        {
-            OnCardMatched?.Invoke(gameSettingsData.PointsPerCardMatch);
         }
     }
 }

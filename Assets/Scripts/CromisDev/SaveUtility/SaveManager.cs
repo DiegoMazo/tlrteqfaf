@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CromisDev.SaveSystem
 {
-    public static class SaveManager<T> where T : class
+    public class SaveManager<T> where T : class
     {
         private static string GetPath(string fileName)
         {
@@ -43,6 +43,5 @@ namespace CromisDev.SaveSystem
         }
 
         public static bool Exists(string fileName) => File.Exists(GetPath(fileName));
-
     }
 }

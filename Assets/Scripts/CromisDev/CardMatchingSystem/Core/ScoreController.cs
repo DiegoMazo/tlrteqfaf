@@ -1,5 +1,6 @@
 
 using System;
+using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -33,6 +34,11 @@ namespace CromisDev.CardMatchingSystem
         private void HandleCardMatched(uint points)
         {
             Score += points;
+        }
+
+        public static void LoadScore(uint score)
+        {
+            Score = score;
         }
     }
 }

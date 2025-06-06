@@ -23,6 +23,8 @@ namespace CromisDev.CardMatchingSystem
         public static float Width { get; private set; }
         public static float Height { get; private set; }
 
+        public static IReadOnlyList<Card> Cards => Instance.cards;
+
         private void Awake()
         {
             if (!Instance)
@@ -87,6 +89,39 @@ namespace CromisDev.CardMatchingSystem
             }
 
             OnBoardCreated?.Invoke();
+        }
+
+        public static bool TryLoadData(GameSaveData data)
+        {
+            Sprite back = Instance.deckDataSO.GetRandomCardBack();
+            Width = data.GridWidth;
+            Height = data.GridHeight;
+
+            foreach (var cardData in data.cards)
+            {
+                if (!Instance.deckDataSO.TryGetFront(cardData.cardId, out Sprite front))
+                {
+                    Debug.Log("SaveData Corrupted");
+
+                    Instance.cards.ForEach(c => DestroyImmediate(c.gameObject));
+                    Instance.cards.Clear();
+                    return false;
+                }
+
+                Card card = Instantiate(Instance.cardPrefab, cardData.position, Quaternion.identity, Instance.transform);
+                card.Initialize(cardData.state, front, back);
+
+                if (cardData.isMatched)
+                {
+                    card.ForceSetMatched();
+                }
+
+                Instance.cards.Add(card);
+            }
+
+
+            OnBoardCreated?.Invoke();
+            return true;
         }
     }
 }

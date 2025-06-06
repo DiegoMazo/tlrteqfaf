@@ -119,5 +119,12 @@ namespace CromisDev.CardMatchingSystem
 
             spriteRenderer.color = Color.green;
         }
+
+        public void ForceSetMatched()
+        {
+            IsMatched = true;
+            flipCts?.Cancel();
+            spriteRenderer.color = Color.green;
+        }
     }
 }

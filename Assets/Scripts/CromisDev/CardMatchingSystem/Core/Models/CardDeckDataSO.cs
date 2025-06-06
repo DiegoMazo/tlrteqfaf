@@ -42,5 +42,11 @@ namespace CromisDev.CardMatchingSystem
 
             return shuffled.Take(count).ToList();
         }
+
+        public bool TryGetFront(string cardId, out Sprite sprite)
+        {
+            sprite = cardFronts.FirstOrDefault(cf => cf.name == cardId);
+            return sprite != null;
+        }
     }
 }
