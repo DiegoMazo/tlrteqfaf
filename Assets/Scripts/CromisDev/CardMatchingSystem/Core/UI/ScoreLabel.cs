@@ -33,15 +33,12 @@ namespace CromisDev.CardMatchingSystem
         {
             if ((uint)currentScore == targetScore) return;
 
-            // Calcula la diferencia y dirección
             float direction = Mathf.Sign(targetScore - currentScore);
             float delta = updateSpeed * Time.deltaTime * direction;
 
             currentScore += delta;
 
-            // Clamp al target final
-            if ((direction > 0f && currentScore >= targetScore) ||
-                (direction < 0f && currentScore <= targetScore))
+            if ((direction > 0f && currentScore >= targetScore) || (direction < 0f && currentScore <= targetScore))
             {
                 currentScore = targetScore;
             }

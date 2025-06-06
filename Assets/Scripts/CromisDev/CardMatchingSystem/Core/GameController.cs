@@ -4,7 +4,7 @@ namespace CromisDev.CardMatchingSystem
 {
     public class GameController : MonoBehaviour
     {
-        private const string SAVE_FILE_NAME = "save_Data";
+        private const string SAVE_FILE_NAME = "save_data";
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
         private static GameSettingsData gameSettingsData;
@@ -53,6 +53,10 @@ namespace CromisDev.CardMatchingSystem
             {
                 StartNewGame();
             }
+            else
+            {
+                StartGame();
+            }
         }
 
         private async void BoardLayoutController_OnBoardCreated()
@@ -65,9 +69,23 @@ namespace CromisDev.CardMatchingSystem
                 await BoardLayoutController.RevelaCardsAsync(gameSettingsData.RevealTime);
             }
 
+            StartGame();
+        }
+
+        private void StartGame()
+        {
             cardMatchHandler.StartListening();
             scoreController.StartListening();
             ShouldInteract = true;
         }
+
+        #region Testing methods
+#if UNITY_EDITOR
+        [ContextMenu(nameof(TriggerNewGame))] public void TriggerNewGame() => StartNewGame();
+        [ContextMenu(nameof(SaveGame))] public void SaveGame() => SaveCardGameManager.SaveGame(SAVE_FILE_NAME);
+        [ContextMenu(nameof(TriggerLoadGame))] public void TriggerLoadGame() => LoadGame();
+#endif
+
+        #endregion
     }
 }

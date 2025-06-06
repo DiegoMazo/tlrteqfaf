@@ -29,7 +29,11 @@ namespace CromisDev.SaveSystem
         {
             string path = GetPath(fileName);
             if (!File.Exists(path))
+            {
+                Debug.LogError($"File with name {fileName} not found");
                 return null;
+            }
+
 
             string json = await File.ReadAllTextAsync(path);
             return JsonUtility.FromJson<T>(json);
