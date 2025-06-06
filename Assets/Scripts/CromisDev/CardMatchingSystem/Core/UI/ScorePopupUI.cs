@@ -6,7 +6,7 @@ namespace CromisDev.CardMatchingSystem
 {
     public class ScorePopupUI : MonoBehaviour
     {
-        [SerializeField] private Canvas canvas;
+        [SerializeField] private RectTransform rectTransformPanel;
         [SerializeField] private TextMeshProUGUI scoreTextPrefab;
 
         [SerializeField] private Vector2 startOffset = new(-100f, -50f);
@@ -25,7 +25,7 @@ namespace CromisDev.CardMatchingSystem
 
         private void ShowScoreText(uint points)
         {
-            TextMeshProUGUI popup = Instantiate(scoreTextPrefab, canvas.transform);
+            TextMeshProUGUI popup = Instantiate(scoreTextPrefab, rectTransformPanel.transform);
             popup.text = $"+{points}";
 
             RectTransform rect = popup.rectTransform;

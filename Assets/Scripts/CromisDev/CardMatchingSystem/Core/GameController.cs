@@ -1,7 +1,7 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using CromisDev.AudioSystem;
+using CromisDev.SimplePanelSystem;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -13,6 +13,7 @@ namespace CromisDev.CardMatchingSystem
         private const int START_DELAY = 500;
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
+        [SerializeField] private PanelManager panelManager;
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
         public static bool ShouldInteract { get; private set; }
@@ -92,6 +93,7 @@ namespace CromisDev.CardMatchingSystem
         private void OnMismatched()
         {
             AudioManager.PlaySFX(AudioClipID.MISMATCHING, 1);
+
         }
 
         private void OnCardMatched(uint matchedCardId)
@@ -111,6 +113,7 @@ namespace CromisDev.CardMatchingSystem
         private void OnGameCompleted()
         {
             AudioManager.PlaySFX(AudioClipID.GAMEOVER, 1);
+            panelManager.ShowPanel(PanelType.IN_GAME_GAMEOVER);
         }
         #region Testing methods
 #if UNITY_EDITOR
