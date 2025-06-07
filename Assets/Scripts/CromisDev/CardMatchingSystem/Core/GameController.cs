@@ -152,7 +152,8 @@ namespace CromisDev.CardMatchingSystem
 
         private void OnComboIncreased(uint amount)
         {
-            scoreController.AddPoints(amount * gameSettingsData.ComboPoints);
+            if (amount > 1)
+                scoreController.AddPoints(amount * gameSettingsData.ComboPoints);
         }
 
         private void OnMismatched()
