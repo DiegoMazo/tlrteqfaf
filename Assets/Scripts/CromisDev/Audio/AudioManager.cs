@@ -63,6 +63,15 @@ namespace CromisDev.AudioSystem
             PlaySFX(clip, volume);
         }
 
+        public static void PlayUISFX(string sfxID, float volume = 1f)
+        {
+            if (!Instance.audioLibrarySO.TryGetClip(sfxID, out AudioClip clip))
+            {
+                throw new ArgumentException($"UI Sound ID '{sfxID}' not found in AudioLibrary.");
+            }
+            PlayUISFX(clip, volume);
+        }
+
         public static void PlayUISFX(AudioClip clip, float volume = 1f)
         {
             Instance.uiAudioSource.volume = volume;
