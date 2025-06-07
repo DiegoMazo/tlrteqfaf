@@ -1,7 +1,7 @@
 # Memory Card Matching Game
 
 ## Unity Version
-Developed using **Unity 2021.3.4f1** (LTS). This is the latest LTS version of 2021 at the time of starting the test, so it is recommended to run the project in this version to avoid problems.
+Developed using **Unity 2021.3.45f1** (LTS). This is the latest LTS version of 2021 at the time of starting the test, so it is recommended to run the project in this version to avoid problems.
 
 ### The code has almost no comments as I am using a self-documenting code approach, adding comments only when they are truly necessary. For example, the comment added in the GameSettingsData.
 
