@@ -17,7 +17,7 @@ namespace CromisDev.CardMatchingSystem
         {
             GameSaveData data = new()
             {
-                score = ScoreController.Score,
+                score = GameController.ScoreController.Score,
                 shouldInteract = GameController.ShouldInteract,
                 saveTime = DateTime.Now,
                 GridWidth = BoardLayoutController.Width,

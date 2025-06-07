@@ -19,6 +19,14 @@ namespace CromisDev.CardMatchingSystem
         private bool shouldInteract;
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
+
+
+        private CardMatchHandler cardMatchHandler;
+        private ScoreController scoreController;
+        private ComboTracker comboTracker;
+        public static PanelManager PanelManager => Instance.panelManager;
+        public static ScoreController ScoreController => Instance.scoreController;
+        public static bool IsGamePaused => Instance.isGamePaused;
         public static bool ShouldInteract
         {
             get => Instance.shouldInteract;
@@ -27,11 +35,6 @@ namespace CromisDev.CardMatchingSystem
                 Instance.shouldInteract = value;
             }
         }
-        private CardMatchHandler cardMatchHandler;
-        private ScoreController scoreController;
-        private ComboTracker comboTracker;
-        public static PanelManager PanelManager => Instance.panelManager;
-        public static bool IsGamePaused => Instance.isGamePaused;
 
         public static bool GameComplete { get; private set; }
 
@@ -104,7 +107,7 @@ namespace CromisDev.CardMatchingSystem
         {
             GameSaveData data = await SaveCardGameManager.LoadAsync();
 
-            ScoreController.LoadScore(data.score);
+            scoreController.LoadScore(data.score);
             ShouldInteract = data.shouldInteract;
             bool succed = BoardLayoutController.TryLoadData(data);
 

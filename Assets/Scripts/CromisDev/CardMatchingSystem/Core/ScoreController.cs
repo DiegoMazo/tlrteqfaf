@@ -4,8 +4,8 @@ namespace CromisDev.CardMatchingSystem
 {
     public class ScoreController
     {
-        public static uint score;
-        public static uint Score
+        public uint score;
+        public uint Score
         {
             get => score;
             private set
@@ -34,7 +34,7 @@ namespace CromisDev.CardMatchingSystem
             Score += points;
         }
 
-        public static void LoadScore(uint score)
+        public void LoadScore(uint score)
         {
             Score = score;
         }
