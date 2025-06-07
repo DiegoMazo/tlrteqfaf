@@ -965,7 +965,6 @@ MonoBehaviour:
   saveGameButton: {fileID: 485583771}
   returnToMenuButton: {fileID: 536537472}
   feedbackLabel: {fileID: 32614870}
-  mainMenuSceneName: Menu
 --- !u!114 &438642926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1898,7 +1897,6 @@ MonoBehaviour:
   startHidden: 1
   newGameBtn: {fileID: 314371881}
   returnToMenuBtn: {fileID: 86270254}
-  menuSceneName: Menu
 --- !u!1 &870422549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2123,7 +2121,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Return
+  m_text: Resume
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
