@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using CromisDev.AudioSystem;
 using CromisDev.SimplePanelSystem;
@@ -14,12 +16,20 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField] private GameSettingsSO gameSettingsSO;
         [SerializeField] private PanelManager panelManager;
         private bool isGamePaused;
+        private bool shouldInteract;
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
-        public static bool ShouldInteract { get; private set; }
+        public static bool ShouldInteract
+        {
+            get => Instance.shouldInteract;
+            private set
+            {
+                Instance.shouldInteract = value;
+            }
+        }
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
-
+        private ComboTracker comboTracker;
         public static PanelManager PanelManager => Instance.panelManager;
         public static bool IsGamePaused => Instance.isGamePaused;
 
@@ -54,9 +64,11 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler.StopListening();
             scoreController.StopListening();
+            comboTracker?.StopListening();
 
             CardMatchHandler.OnCardMatched -= OnCardMatched;
             CardMatchHandler.OnMismatched -= OnMismatched;
+            ComboTracker.OnComboIncreased -= OnComboIncreased;
         }
 
         public static void SetPauseState(bool value)
@@ -126,14 +138,23 @@ namespace CromisDev.CardMatchingSystem
             scoreController.StartListening();
             ShouldInteract = true;
 
+            comboTracker = new ComboTracker(gameSettingsData.MaxComboInterval);
+            comboTracker.StartListening();
+
             CardMatchHandler.OnCardMatched += OnCardMatched;
             CardMatchHandler.OnMismatched += OnMismatched;
+            ComboTracker.OnComboIncreased += OnComboIncreased;
+        }
+
+        private void OnComboIncreased(uint amount)
+        {
+            scoreController.AddPoints(amount * gameSettingsData.ComboPoints);
         }
 
         private void OnMismatched()
         {
             AudioManager.PlaySFX(AudioClipID.MISMATCHING, 1);
-
+            comboTracker?.ResetCombo();
         }
 
         private void OnCardMatched(uint matchedCardId)

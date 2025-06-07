@@ -1,7 +1,5 @@
 
 using System;
-using UnityEngine;
-
 namespace CromisDev.CardMatchingSystem
 {
     public class ScoreController
@@ -23,15 +21,15 @@ namespace CromisDev.CardMatchingSystem
 
         public void StartListening()
         {
-            CardMatchHandler.OnCardMatched += HandleCardMatched;
+            CardMatchHandler.OnCardMatched += AddPoints;
         }
 
         public void StopListening()
         {
-            CardMatchHandler.OnCardMatched -= HandleCardMatched;
+            CardMatchHandler.OnCardMatched -= AddPoints;
         }
 
-        private void HandleCardMatched(uint points)
+        public void AddPoints(uint points)
         {
             Score += points;
         }
