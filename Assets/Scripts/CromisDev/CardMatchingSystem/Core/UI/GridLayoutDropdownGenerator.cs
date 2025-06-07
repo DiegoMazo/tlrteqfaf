@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using CromisDev.CardMatchingSystem;
 using TMPro;
 using UnityEngine;
 namespace CromisDev.SimplePanelSystem
 {
     public class GridLayoutDropdownGenerator : MonoBehaviour
     {
-        public static string LAYOUT_PREFKEY = "CardGridLayout";
         [SerializeField] private TMP_Dropdown layoutDropdown;
 
         private readonly List<Vector2Int> validLayouts = new();
@@ -56,16 +56,16 @@ namespace CromisDev.SimplePanelSystem
             {
                 var selected = validLayouts[index];
                 string save = $"{selected.x},{selected.y}";
-                PlayerPrefs.SetString(LAYOUT_PREFKEY, save);
+                PlayerPrefs.SetString(GameConstants.PrefKeys.LAYOUT_PREFKEY, save);
                 PlayerPrefs.Save();
             }
         }
 
         private void LoadSelection()
         {
-            if (!PlayerPrefs.HasKey(LAYOUT_PREFKEY)) return;
+            if (!PlayerPrefs.HasKey(GameConstants.PrefKeys.LAYOUT_PREFKEY)) return;
 
-            string saved = PlayerPrefs.GetString(LAYOUT_PREFKEY);
+            string saved = PlayerPrefs.GetString(GameConstants.PrefKeys.LAYOUT_PREFKEY);
             var parts = saved.Split(',');
             if (parts.Length != 2) return;
 

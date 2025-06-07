@@ -32,7 +32,7 @@ namespace CromisDev.SimplePanelSystem
             }
         }
 
-        public void Show()
+        public virtual void Show()
         {
             SetActive(true);
             canvasGroup.alpha = 1f;
@@ -40,7 +40,7 @@ namespace CromisDev.SimplePanelSystem
             canvasGroup.blocksRaycasts = true;
         }
 
-        public void Hide()
+        public virtual void Hide()
         {
             canvasGroup.alpha = 0f;
             canvasGroup.interactable = false;

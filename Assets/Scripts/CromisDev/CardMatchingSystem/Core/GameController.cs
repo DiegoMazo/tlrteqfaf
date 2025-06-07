@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CromisDev.AudioSystem;
 using CromisDev.SimplePanelSystem;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace CromisDev.CardMatchingSystem
@@ -14,11 +13,17 @@ namespace CromisDev.CardMatchingSystem
         public static GameController Instance { get; private set; }
         [SerializeField] private GameSettingsSO gameSettingsSO;
         [SerializeField] private PanelManager panelManager;
+        private bool isGamePaused;
         private static GameSettingsData gameSettingsData;
         public static GameSettingsData Settings => gameSettingsData;
         public static bool ShouldInteract { get; private set; }
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
+
+        public static PanelManager PanelManager => Instance.panelManager;
+        public static bool IsGamePaused => Instance.isGamePaused;
+
+        public static bool GameComplete { get; private set; }
 
         private void Awake()
         {
@@ -49,6 +54,14 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler.StopListening();
             scoreController.StopListening();
+
+            CardMatchHandler.OnCardMatched -= OnCardMatched;
+            CardMatchHandler.OnMismatched -= OnMismatched;
+        }
+
+        public static void SetPauseState(bool value)
+        {
+            Instance.isGamePaused = value;
         }
 
         private Vector2Int LoadSavedLayout(string key, Vector2Int defaultValue)
@@ -130,8 +143,9 @@ namespace CromisDev.CardMatchingSystem
 
             if (isGameComplete)
             {
+                GameComplete = true;
                 ShouldInteract = false;
-
+                SaveCardGameManager.Delete();
                 Invoke(nameof(OnGameCompleted), ON_GAME_COMPLETED_FEEDBACK_DELAY);
             }
         }
@@ -148,7 +162,6 @@ namespace CromisDev.CardMatchingSystem
         [ContextMenu(nameof(SaveGame))] public void SaveGame() => SaveCardGameManager.SaveGame();
         [ContextMenu(nameof(TriggerLoadGame))] public void TriggerLoadGame() => LoadGame();
 #endif
-
         #endregion
     }
 }

@@ -1,3 +1,4 @@
+using CromisDev.CardMatchingSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,7 +11,6 @@ namespace CromisDev.SimplePanelSystem
         [Header("UI Buttons")]
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button backButton;
-        [SerializeField] private string ingameSceneName;
         [SerializeField] private PanelManager panelManager;
 
         public override void Initialize()
@@ -23,7 +23,7 @@ namespace CromisDev.SimplePanelSystem
 
         private void OnStartGameClicked()
         {
-            SceneManager.LoadScene(ingameSceneName);
+            SceneManager.LoadScene(GameConstants.Scenes.GAME);
         }
 
         private void OnBackClicked()

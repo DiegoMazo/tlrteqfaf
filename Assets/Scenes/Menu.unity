@@ -846,7 +846,6 @@ MonoBehaviour:
   startHidden: 1
   startGameButton: {fileID: 1617122315}
   backButton: {fileID: 2038209092}
-  ingameSceneName: GameScene
   panelManager: {fileID: 1519643090}
 --- !u!1 &599921433
 GameObject:
@@ -2779,9 +2778,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panels:
-  - panelType: 2
-    panel: {fileID: 1875694502}
   - panelType: 3
+    panel: {fileID: 1875694502}
+  - panelType: 4
     panel: {fileID: 548270254}
 --- !u!1 &1583387028
 GameObject:
@@ -3291,7 +3290,6 @@ MonoBehaviour:
   startHidden: 0
   newGameButton: {fileID: 795229522}
   loadGameButton: {fileID: 599921435}
-  ingameSceneName: GameScene
   panelManager: {fileID: 1519643090}
 --- !u!1 &1969503499
 GameObject:

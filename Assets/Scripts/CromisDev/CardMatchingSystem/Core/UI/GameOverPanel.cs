@@ -1,5 +1,6 @@
 using CromisDev.SimplePanelSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace CromisDev.CardMatchingSystem
@@ -25,12 +26,13 @@ namespace CromisDev.CardMatchingSystem
 
         private void OnNewGameClicked()
         {
-
+            SaveCardGameManager.Delete();
+            SceneManager.LoadScene(GameConstants.Scenes.GAME);
         }
 
         private void OnReturnToMenuClicked()
         {
-
+            SceneManager.LoadScene(GameConstants.Scenes.MENU);
         }
     }
 }

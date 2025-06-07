@@ -6,6 +6,7 @@ namespace CromisDev.SimplePanelSystem
     {   /*In Game Panels*/
         IN_GAME_MAIN,
         IN_GAME_GAMEOVER,
+        IN_GAME_PAUSE,
 
         /*Menu Panels*/
         MENU_MAIN,

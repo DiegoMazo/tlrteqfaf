@@ -11,7 +11,6 @@ namespace CromisDev.SimplePanelSystem
         [Header("UI Buttons")]
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button loadGameButton;
-        [SerializeField] private string ingameSceneName;
         [SerializeField] private PanelManager panelManager;
 
         public override void Initialize()
@@ -36,7 +35,7 @@ namespace CromisDev.SimplePanelSystem
 
         private void OnLoadGameClicked()
         {
-            SceneManager.LoadScene(ingameSceneName);
+            SceneManager.LoadScene(GameConstants.Scenes.GAME);
         }
 
         private void OnDestroy()

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System;
 using System.Threading;
 using CromisDev.AudioSystem;
+using System.Text;
 
 namespace CromisDev.CardMatchingSystem
 {
@@ -26,10 +27,9 @@ namespace CromisDev.CardMatchingSystem
         public Vector3 GetSize => spriteRenderer.bounds.size;
 
         private CancellationTokenSource flipCts;
-
         private void OnMouseDown()
         {
-            if (!GameController.ShouldInteract || IsFlipping || IsMatched) return;
+            if (!GameController.ShouldInteract || IsFlipping || IsMatched || GameController.IsGamePaused) return;
             _ = Flip();
         }
 
