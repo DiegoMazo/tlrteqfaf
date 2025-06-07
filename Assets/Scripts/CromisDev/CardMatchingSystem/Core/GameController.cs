@@ -84,7 +84,7 @@ namespace CromisDev.CardMatchingSystem
         public void RequestNewGame()
         {
             BoardLayoutController.OnBoardCreated += BoardLayoutController_OnBoardCreated;
-            Vector2Int gridSize = LoadSavedLayout(GridLayoutDropdownGenerator.LAYOUT_PREFKEY, Vector2Int.one * 2);
+            Vector2Int gridSize = LoadSavedLayout(GameConstants.PrefKeys.LAYOUT_PREFKEY, Vector2Int.one * 2);
             BoardLayoutController.GenerateBoard(gridSize);
         }
 
