@@ -17,6 +17,7 @@ namespace CromisDev.CardMatchingSystem
         [SerializeField] private PanelManager panelManager;
         private bool isGamePaused;
         private bool shouldInteract;
+        private bool gameComplete;
         private static GameSettingsData gameSettingsData;
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
@@ -31,7 +32,14 @@ namespace CromisDev.CardMatchingSystem
             }
         }
 
-        public static bool GameComplete { get; private set; }
+        public static bool GameComplete
+        {
+            get => Instance.gameComplete;
+            private set
+            {
+                Instance.gameComplete = value;
+            }
+        }
         public static GameSettingsData Settings => gameSettingsData;
         public static ComboTracker ComboTracker => Instance.comboTracker;
         public static PanelManager PanelManager => Instance.panelManager;
