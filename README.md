@@ -5,7 +5,7 @@ Developed using **Unity 2021.3.45f1** (LTS). This is the latest LTS version of 2
 
 ### The code has almost no comments as I am using a self-documenting code approach, adding comments only when they are truly necessary. For example, the comment added in the GameSettingsData.
 
-## For this test, I used the standVard deck.
+## For this test, I used the stand deck.
 - Numbers (1-10/J/Q/K)
 - Colors (red/black)
 - Suits (♠ Spades, ♥ Hearts, ♦ Diamonds, ♣ Clubs)
