@@ -14,6 +14,7 @@ namespace CromisDev.AudioSystem
         [SerializeField] private AudioLibrarySO audioLibrarySO;
         [SerializeField] private Transform sfxParent;
         [SerializeField] private uint initialPoolSize = 5;
+        [SerializeField] bool dondDestroyOnLoad;
 
         private ObjectPooler<PoolableAudioSource> sfxPool;
 
@@ -28,6 +29,12 @@ namespace CromisDev.AudioSystem
                 DestroyImmediate(gameObject);
                 return;
             }
+
+            if (dondDestroyOnLoad)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+
             audioLibrarySO.Initialize();
             sfxPool = new ObjectPooler<PoolableAudioSource>(sfxPrefab, initialPoolSize, sfxParent);
         }
@@ -63,11 +70,11 @@ namespace CromisDev.AudioSystem
             PlaySFX(clip, volume);
         }
 
-        public static void PlayUISFX(string sfxID, float volume = 1f)
+        public static void PlayUISFX(string soundID, float volume = 1f)
         {
-            if (!Instance.audioLibrarySO.TryGetClip(sfxID, out AudioClip clip))
+            if (!Instance.audioLibrarySO.TryGetClip(soundID, out AudioClip clip))
             {
-                throw new ArgumentException($"UI Sound ID '{sfxID}' not found in AudioLibrary.");
+                throw new ArgumentException($"UI Sound ID '{soundID}' not found in AudioLibrary.");
             }
             PlayUISFX(clip, volume);
         }
