@@ -18,15 +18,10 @@ namespace CromisDev.CardMatchingSystem
         private bool isGamePaused;
         private bool shouldInteract;
         private static GameSettingsData gameSettingsData;
-        public static GameSettingsData Settings => gameSettingsData;
-
-
         private CardMatchHandler cardMatchHandler;
         private ScoreController scoreController;
         private ComboTracker comboTracker;
-        public static PanelManager PanelManager => Instance.panelManager;
-        public static ScoreController ScoreController => Instance.scoreController;
-        public static bool IsGamePaused => Instance.isGamePaused;
+
         public static bool ShouldInteract
         {
             get => Instance.shouldInteract;
@@ -37,6 +32,11 @@ namespace CromisDev.CardMatchingSystem
         }
 
         public static bool GameComplete { get; private set; }
+        public static GameSettingsData Settings => gameSettingsData;
+        public static ComboTracker ComboTracker => Instance.comboTracker;
+        public static PanelManager PanelManager => Instance.panelManager;
+        public static ScoreController ScoreController => Instance.scoreController;
+        public static bool IsGamePaused => Instance.isGamePaused;
 
         private void Awake()
         {
@@ -52,6 +52,7 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler = new CardMatchHandler(this);
             scoreController = new();
+            comboTracker = new ComboTracker(gameSettingsData.MaxComboInterval);
 
             if (SaveCardGameManager.Exists())
             {
@@ -109,6 +110,7 @@ namespace CromisDev.CardMatchingSystem
 
             scoreController.LoadScore(data.score);
             ShouldInteract = data.shouldInteract;
+            ComboTracker.RestoreComboCount(data.ComboCount);
             bool succed = BoardLayoutController.TryLoadData(data);
 
             if (!succed)
@@ -139,10 +141,9 @@ namespace CromisDev.CardMatchingSystem
         {
             cardMatchHandler.StartListening();
             scoreController.StartListening();
-            ShouldInteract = true;
-
-            comboTracker = new ComboTracker(gameSettingsData.MaxComboInterval);
             comboTracker.StartListening();
+
+            ShouldInteract = true;
 
             CardMatchHandler.OnCardMatched += OnCardMatched;
             CardMatchHandler.OnMismatched += OnMismatched;

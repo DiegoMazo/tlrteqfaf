@@ -21,7 +21,8 @@ namespace CromisDev.CardMatchingSystem
                 shouldInteract = GameController.ShouldInteract,
                 saveTime = DateTime.Now,
                 GridWidth = BoardLayoutController.Width,
-                GridHeight = BoardLayoutController.Height
+                GridHeight = BoardLayoutController.Height,
+                ComboCount = GameController.ComboTracker.CurrentCombo
             };
 
             foreach (Card card in BoardLayoutController.Cards)

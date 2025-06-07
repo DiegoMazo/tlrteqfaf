@@ -10,8 +10,8 @@ namespace CromisDev.CardMatchingSystem
         public bool shouldInteract;
         public List<SerializableCardData> cards = new();
         public DateTime saveTime;
-
         public float GridWidth;
         public float GridHeight;
+        public uint ComboCount;
     }
 }

@@ -27,6 +27,12 @@ namespace CromisDev.CardMatchingSystem
             CardMatchHandler.OnCardMatched -= HandleMatch;
         }
 
+        public void RestoreComboCount(uint count)
+        {
+            comboCount = count;
+            lastMatchTime = 0f;
+        }
+
         private void HandleMatch(uint _)
         {
             float currentTime = Time.time;
